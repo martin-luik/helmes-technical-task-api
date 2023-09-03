@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+  http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+    <changeSet author="martin.luik" id="2023-09-02.1">
+        <sql>
+            insert into industry.category (id, name, status) values (1,'Manufacturing', true);
+            insert into industry.category (id, relation_id, name, status) values (2, 1, 'Construction materials', true);
+            insert into industry.category (id, relation_id, name, status) values (3, 1, 'Electronics and Optics', true);
+            insert into industry.category (id, relation_id, name, status) values (4, 1, 'Food and Beverage', true);
+            insert into industry.category (id, relation_id, name, status) values (5, 4, 'Bakery &amp; confectionery products', true);
+            insert into industry.category (id, relation_id, name, status) values (7, 4, 'Beverages', true);
+            insert into industry.category (id, relation_id, name, status) values (8, 4, 'Fish &amp; fish products', true);
+            insert into industry.category (id, relation_id, name, status) values (9, 4, 'Meat &amp; meat products', true);
+            insert into industry.category (id, relation_id, name, status) values (10, 4, 'Milk &amp; dairy products', true);
+            insert into industry.category (id, relation_id, name, status) values (11, 4, 'Other', true);
+            insert into industry.category (id, relation_id, name, status) values (12, 4, 'Sweets &amp; snack food', true);
+            insert into industry.category (id, relation_id, name, status) values (13, 1, 'Furniture', true);
+            insert into industry.category (id, relation_id, name, status) values (14, 13, 'Bathroom/sauna', true);
+            insert into industry.category (id, relation_id, name, status) values (16, 13, 'Bedroom', true);
+            insert into industry.category (id, relation_id, name, status) values (17, 13, 'Childrenâ€™s room', true);
+            insert into industry.category (id, relation_id, name, status) values (18, 13, 'Kitchen', true);
+            insert into industry.category (id, relation_id, name, status) values (19, 13, 'Living room', true);
+            insert into industry.category (id, relation_id, name, status) values (20, 13, 'Office', true);
+            insert into industry.category (id, relation_id, name, status) values (21, 13, 'Other (Furniture)', true);
+            insert into industry.category (id, relation_id, name, status) values (23, 13, 'Outdoor', true);
+            insert into industry.category (id, relation_id, name, status) values (24, 13, 'Project furniture', true);
+            insert into industry.category (id, relation_id, name, status) values (25, 1, 'Machinery', true);
+            insert into industry.category (id, relation_id, name, status) values (26, 25, 'Machinery components', true);
+            insert into industry.category (id, relation_id, name, status) values (27, 25, 'Machinery equipment/tools', true);
+            insert into industry.category (id, relation_id, name, status) values (28, 25, 'Manufacture of machinery', true);
+            insert into industry.category (id, relation_id, name, status) values (29, 25, 'Maritime', true);
+            insert into industry.category (id, relation_id, name, status) values (30, 29, 'Aluminium and steel work boats', true);
+            insert into industry.category (id, relation_id, name, status) values (31, 29, 'Boat/Yacht building', true);
+            insert into industry.category (id, relation_id, name, status) values (32, 29, 'Ship repair and conversion', true);
+            insert into industry.category (id, relation_id, name, status) values (33, 25, 'Metal structures', true);
+            insert into industry.category (id, relation_id, name, status) values (34, 25, 'Other', true);
+            insert into industry.category (id, relation_id, name, status) values (35, 25, 'Repair and maintenance service', true);
+            insert into industry.category (id, relation_id, name, status) values (36, 1, 'Metalworking', true);
+            insert into industry.category (id, relation_id, name, status) values (37, 36, 'Construction of metal structures', true);
+            insert into industry.category (id, relation_id, name, status) values (38, 36, 'Houses and buildings', true);
+            insert into industry.category (id, relation_id, name, status) values (39, 36, 'Metal products', true);
+            insert into industry.category (id, relation_id, name, status) values (40, 36, 'Metal works', true);
+            insert into industry.category (id, relation_id, name, status) values (41, 40, 'CNC-machining', true);
+            insert into industry.category (id, relation_id, name, status) values (42, 40, 'Forgings, Fasteners', true);
+            insert into industry.category (id, relation_id, name, status) values (43, 40, 'Gas, Plasma, Laser cutting', true);
+            insert into industry.category (id, relation_id, name, status) values (44, 40, 'MIG, TIG, Aluminum welding', true);
+            insert into industry.category (id, relation_id, name, status) values (45, 1, 'Plastic and Rubber', true);
+            insert into industry.category (id, relation_id, name, status) values (46, 45, 'Packaging', true);
+            insert into industry.category (id, relation_id, name, status) values (47, 45, 'Plastic goods', true);
+            insert into industry.category (id, relation_id, name, status) values (48, 45, 'Plastic processing technology', true);
+            insert into industry.category (id, relation_id, name, status) values (49, 48, 'Blowing', true);
+            insert into industry.category (id, relation_id, name, status) values (50, 48, 'Moulding', true);
+            insert into industry.category (id, relation_id, name, status) values (51, 48, 'Plastics welding and processing', true);
+            insert into industry.category (id, relation_id, name, status) values (52, 45, 'Plastic profiles', true);
+            insert into industry.category (id, relation_id, name, status) values (53, 1, 'Printing', true);
+            insert into industry.category (id, relation_id, name, status) values (54, 53, 'Advertising', true);
+            insert into industry.category (id, relation_id, name, status) values (55, 53, 'Book/Periodicals printing', true);
+            insert into industry.category (id, relation_id, name, status) values (56, 53, 'Labelling and packaging printing', true);
+            insert into industry.category (id, relation_id, name, status) values (57, 1, 'Textile and Clothing', true);
+            insert into industry.category (id, relation_id, name, status) values (58, 57, 'Clothing', true);
+            insert into industry.category (id, relation_id, name, status) values (59, 57, 'Textile', true);
+            insert into industry.category (id, relation_id, name, status) values (60, 1, 'Wood', true);
+            insert into industry.category (id, relation_id, name, status) values (61, 60, 'Other (Wood)', true);
+            insert into industry.category (id, relation_id, name, status) values (62, 60, 'Wooden building materials', true);
+            insert into industry.category (id, relation_id, name, status) values (63, 60, 'Wooden houses', true);
+            insert into industry.category (id, name, status) values (64, 'Other', true);
+            insert into industry.category (id, relation_id, name, status) values (65, 64, 'Creative industries', true);
+            insert into industry.category (id, relation_id, name, status) values (66, 64, 'Energy technology', true);
+            insert into industry.category (id, relation_id, name, status) values (67, 64, 'Environment', true);
+            insert into industry.category (id, name, status) values (68, 'Service', true);
+            insert into industry.category (id, relation_id, name, status) values (69, 68, 'Business services', true);
+            insert into industry.category (id, relation_id, name, status) values (70, 68, 'Engineering', true);
+            insert into industry.category (id, relation_id, name, status) values (71, 68, 'Information Technology and Telecommunications', true);
+            insert into industry.category (id, relation_id, name, status) values (72, 71, 'Data processing, Web portals, E-marketing', true);
+            insert into industry.category (id, relation_id, name, status) values (73, 71, 'Programming, Consultancy', true);
+            insert into industry.category (id, relation_id, name, status) values (74, 71, 'Software, Hardware', true);
+            insert into industry.category (id, relation_id, name, status) values (75, 71, 'Telecommunications', true);
+            insert into industry.category (id, relation_id, name, status) values (76, 68, 'Tourism', true);
+            insert into industry.category (id, relation_id, name, status) values (77, 68, 'Translation services', true);
+            insert into industry.category (id, relation_id, name, status) values (78, 68, 'Transport and Logistics', true);
+            insert into industry.category (id, relation_id, name, status) values (79, 78, 'Air', true);
+            insert into industry.category (id, relation_id, name, status) values (80, 78, 'Rail', true);
+            insert into industry.category (id, relation_id, name, status) values (81, 78, 'Road', true);
+            insert into industry.category (id, relation_id, name, status) values (82, 78, 'Water', true);
+
+            SELECT setval('industry.category_id_seq', (SELECT MAX(id) FROM industry.category)+1);
+        </sql>
+    </changeSet>
+</databaseChangeLog>
