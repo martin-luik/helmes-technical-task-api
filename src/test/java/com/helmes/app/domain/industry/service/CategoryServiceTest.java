@@ -34,7 +34,7 @@ class CategoryServiceTest {
 
         Optional<Category> category = categoryService.getById(1L);
 
-        assertEquals(expectedCategory, category);
+        assertEquals(Optional.of(expectedCategory), category);
     }
 
     @Test
@@ -85,6 +85,8 @@ class CategoryServiceTest {
         category.setName("Test");
         category.setRelationId(1L);
         category.setStatus(true);
+
+        doReturn(Optional.of(category)).when(categoryRepository).findById(1L);
 
         categoryService.edit(category);
 

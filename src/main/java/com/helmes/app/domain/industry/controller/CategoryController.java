@@ -3,7 +3,6 @@ package com.helmes.app.domain.industry.controller;
 import com.helmes.app.common.exception.BusinessError;
 import com.helmes.app.common.exception.BusinessLogicException;
 import com.helmes.app.domain.industry.dto.AddCategoryDto;
-import com.helmes.app.domain.industry.dto.CategoryStackDto;
 import com.helmes.app.domain.industry.dto.CategoryTreeDto;
 import com.helmes.app.domain.industry.dto.EditCategoryDto;
 import com.helmes.app.domain.industry.model.Category;
@@ -30,18 +29,6 @@ public class CategoryController {
     public ResponseEntity<List<CategoryTreeDto>> getAllCategories() {
         List<Category> categories = categoryService.getAll();
         return new ResponseEntity<>(composeCategoryTreeDto(categories), HttpStatus.OK);
-    }
-
-    @GetMapping("/categories/stack")
-    public ResponseEntity<List<CategoryStackDto>> getCategoriesStack() {
-        List<Category> categories = categoryService.getAll();
-        List<CategoryStackDto> categoryStackDtoList = new ArrayList<>(categories.stream().map(category -> CategoryStackDto.builder()
-                .id(category.getId())
-                .name(category.getName())
-                .build()).toList());
-
-        categoryStackDtoList.sort(Comparator.comparing(CategoryStackDto::getName));
-        return new ResponseEntity<>(categoryStackDtoList, HttpStatus.OK);
     }
 
     @PostMapping("/categories")

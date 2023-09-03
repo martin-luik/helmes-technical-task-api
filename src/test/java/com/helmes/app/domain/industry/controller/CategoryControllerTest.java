@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -259,7 +260,7 @@ class CategoryControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(editCategoryDto));
 
-        doReturn(existingCategory2).when(categoryService).getById(editCategoryDto.getId());
+        doReturn(Optional.of(existingCategory2)).when(categoryService).getById(editCategoryDto.getId());
 
         doReturn(List.of(
                 existingCategory1,
@@ -290,7 +291,7 @@ class CategoryControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(editCategoryDto));
 
-        doReturn(null).when(categoryService).getById(editCategoryDto.getId());
+        doReturn(Optional.empty()).when(categoryService).getById(editCategoryDto.getId());
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
@@ -332,12 +333,11 @@ class CategoryControllerTest {
 
         List<CategoryTreeDto> expectedCategoryTreeDto = Collections.emptyList();
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/categories")
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/categories/" + deleteCategoryDto.getId())
                 .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(deleteCategoryDto));
+                .contentType(MediaType.APPLICATION_JSON);
 
-        doReturn(existingCategory).when(categoryService).getById(deleteCategoryDto.getId());
+        doReturn(Optional.of(existingCategory)).when(categoryService).getById(deleteCategoryDto.getId());
 
         doReturn(Collections.emptyList()).when(categoryService).getAll();
 
@@ -345,29 +345,6 @@ class CategoryControllerTest {
 
         verify(categoryService).delete(existingCategory);
         assertEquals(objectMapper.writeValueAsString(expectedCategoryTreeDto), result.getResponse().getContentAsString());
-    }
-
-    @Test
-    void delete_Return400_WhenCategoryNotFound() throws Exception {
-        DeleteCategoryDto deleteCategoryDto = new DeleteCategoryDto();
-        deleteCategoryDto.setId(null);
-
-        ControllerExceptionHandler.ValidationErrorResponse validationErrorResponse = ControllerExceptionHandler.ValidationErrorResponse.builder()
-                .status(400)
-                .message("Validation error")
-                .errors(List.of("error.validation.category.id"))
-                .build();
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/categories")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(deleteCategoryDto));
-
-        doReturn(null).when(categoryService).getById(deleteCategoryDto.getId());
-
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-
-        assertEquals(objectMapper.writeValueAsString(validationErrorResponse), result.getResponse().getContentAsString());
     }
 
     @Test
@@ -381,7 +358,7 @@ class CategoryControllerTest {
                 .errors(List.of("Category not exists"))
                 .build();
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/categories")
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/categories/" + deleteCategoryDto.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(deleteCategoryDto));
