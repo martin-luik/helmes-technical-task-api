@@ -16,7 +16,7 @@ spring:
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.xml
     default-schema: industry
-    drop-first: false
+    drop-first: true
 server:
   servlet:
     context-path: /api
