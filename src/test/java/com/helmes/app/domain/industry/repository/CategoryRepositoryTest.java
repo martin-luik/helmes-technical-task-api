@@ -23,52 +23,47 @@ class CategoryRepositoryTest {
     @Test
     void findById() {
         Category expectedCategory = new Category();
-        expectedCategory.setId(1L);
         expectedCategory.setName("Test");
         expectedCategory.setStatus(true);
 
-        categoryRepository.save(expectedCategory);
+        Category result = categoryRepository.save(expectedCategory);
 
-        Category category = categoryRepository.findById(expectedCategory.getId()).orElse(null);
+        Category category = categoryRepository.findById(result.getId()).orElse(null);
 
-        assertEquals(expectedCategory, category);
+        assertEquals(result, category);
     }
 
     @Test
     void findAll() {
-        Category expectedCategory1 = new Category();
-        expectedCategory1.setId(1L);
-        expectedCategory1.setName("Test1");
-        expectedCategory1.setStatus(true);
+        Category category1 = new Category();
+        category1.setName("Test1");
+        category1.setStatus(true);
 
-        Category expectedCategory2 = new Category();
-        expectedCategory2.setId(2L);
-        expectedCategory2.setRelationId(1L);
-        expectedCategory2.setName("Test2");
-        expectedCategory2.setStatus(true);
+        Category expectedCategory1 = categoryRepository.save(category1);
 
-        List<Category> expectedCategories = List.of(
-                expectedCategory1,
-                expectedCategory2
-        );
+        Category category2 = new Category();
+        category2.setRelationId(expectedCategory1.getId());
+        category2.setName("Test2");
+        category2.setStatus(true);
 
-        categoryRepository.saveAll(expectedCategories);
+        Category expectedCategory2 = categoryRepository.save(category2);
 
         List<Category> categories = categoryRepository.findAll();
 
         assertNotEquals(0, categories.size());
-        assertTrue(categories.containsAll(expectedCategories));
+        assertTrue(categories.containsAll(List.of(expectedCategory1, expectedCategory2)));
     }
 
     @Test
     void save() {
-        Category expectedCategory = new Category();
-        expectedCategory.setId(3L);
-        expectedCategory.setName("Test3");
-        expectedCategory.setStatus(true);
+        Category category = new Category();
+        category.setName("Test3");
+        category.setStatus(true);
 
-        Category category = categoryRepository.save(expectedCategory);
+        Category savedCategory = categoryRepository.save(category);
 
-        assertEquals(expectedCategory, category);
+        Category result = categoryRepository.findById(savedCategory.getId()).orElse(null);
+
+        assertEquals(savedCategory, result);
     }
 }

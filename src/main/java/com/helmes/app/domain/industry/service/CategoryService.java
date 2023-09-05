@@ -6,9 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import static java.lang.String.format;
 
@@ -63,24 +61,36 @@ public class CategoryService {
     }
 
     private boolean isChildCategory(Category category) {
-        List<Category> childCategories = categoryRepository.findAllByRelationId(category.getId());
+        Queue<Category> queue = new LinkedList<>();
+        queue.add(category);
 
-        for (Category childCategory : childCategories) {
-            if (childCategory.getId().equals(category.getRelationId())) {
-                return true;
+        while (!queue.isEmpty()) {
+            Category currentCategory = queue.poll();
+
+            List<Category> childCategories = categoryRepository.findAllByRelationId(currentCategory.getId());
+            for (Category childCategory : childCategories) {
+                if (childCategory.getId().equals(currentCategory.getRelationId())) {
+                    return true;
+                }
+                queue.add(childCategory);
             }
-            isChildCategory(childCategory);
         }
         return false;
     }
 
     private void updateRootCategory(Category category) {
-        categoryRepository.save(category);
+        Queue<Category> queue = new LinkedList<>();
+        queue.add(category);
 
-        List<Category> categories = categoryRepository.findAllByRelationId(category.getId());
-        for (Category childCategory : categories) {
-            childCategory.setRelationId(category.getId());
-            updateRootCategory(childCategory);
+        while (!queue.isEmpty()) {
+            Category currentCategory = queue.poll();
+            categoryRepository.save(currentCategory);
+
+            List<Category> childCategories = categoryRepository.findAllByRelationId(currentCategory.getId());
+            for (Category childCategory : childCategories) {
+                childCategory.setRelationId(currentCategory.getId());
+                queue.add(childCategory);
+            }
         }
     }
 
@@ -88,15 +98,15 @@ public class CategoryService {
     public void delete(Category category) {
         validateWithCategoryId(category);
 
-        deleteRootCategory(category);
-    }
+        Queue<Category> categoryQueue = new LinkedList<>();
+        categoryQueue.add(category);
 
-    private void deleteRootCategory(Category category) {
-        categoryRepository.delete(category);
+        while (!categoryQueue.isEmpty()) {
+            Category currentCategory = categoryQueue.poll();
+            categoryRepository.delete(currentCategory);
 
-        List<Category> categories = categoryRepository.findAllByRelationId(category.getId());
-        for (Category childCategory : categories) {
-            deleteRootCategory(childCategory);
+            List<Category> childCategories = categoryRepository.findAllByRelationId(currentCategory.getId());
+            categoryQueue.addAll(childCategories);
         }
     }
 }
