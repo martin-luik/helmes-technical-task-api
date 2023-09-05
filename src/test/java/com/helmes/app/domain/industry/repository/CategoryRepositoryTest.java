@@ -66,4 +66,25 @@ class CategoryRepositoryTest {
 
         assertEquals(savedCategory, result);
     }
+
+    @Test
+    void findAllByRelationId() {
+        Category category1 = new Category();
+        category1.setName("Test1");
+        category1.setStatus(true);
+
+        Category expectedCategory1 = categoryRepository.save(category1);
+
+        Category category2 = new Category();
+        category2.setRelationId(expectedCategory1.getId());
+        category2.setName("Test2");
+        category2.setStatus(true);
+
+        Category expectedCategory2 = categoryRepository.save(category2);
+
+        List<Category> categories = categoryRepository.findAllByRelationId(expectedCategory1.getId());
+
+        assertNotEquals(0, categories.size());
+        assertTrue(categories.contains(expectedCategory2));
+    }
 }

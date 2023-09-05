@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Validated
 @RestController
@@ -85,20 +87,19 @@ public class CategoryController {
     }
 
     private CategoryTreeDto composeTree(Category parentCategory, List<Category> categoryList) {
-        CategoryTreeDto categoryTreeDto = CategoryTreeDto.builder()
-                .id(parentCategory.getId())
-                .relationId(parentCategory.getRelationId())
-                .name(parentCategory.getName())
-                .status(parentCategory.getStatus())
-                .build();
+        CategoryTreeDto categoryTreeDto = new CategoryTreeDto();
+        categoryTreeDto.setId(parentCategory.getId());
+        categoryTreeDto.setRelationId(parentCategory.getRelationId());
+        categoryTreeDto.setName(parentCategory.getName());
+        categoryTreeDto.setStatus(parentCategory.getStatus());
 
-        List<CategoryTreeDto> childCategoryTreeDto = new ArrayList<>();
-        for (Category category : categoryList) {
-            if (category.getRelationId() != null && category.getRelationId().equals(parentCategory.getId())) {
-                childCategoryTreeDto.add(composeTree(category, categoryList));
-            }
-        }
-        childCategoryTreeDto.sort(Comparator.comparing(CategoryTreeDto::getName));
-        return categoryTreeDto.withChildCategories(childCategoryTreeDto);
+        List<CategoryTreeDto> childCategoryTreeDto = categoryList.stream()
+                .filter(category -> Objects.equals(category.getRelationId(), parentCategory.getId()))
+                .map(category -> composeTree(category, categoryList))
+                .sorted(Comparator.comparing(CategoryTreeDto::getName))
+                .collect(Collectors.toList());
+
+        categoryTreeDto.setChildCategories(childCategoryTreeDto);
+        return categoryTreeDto;
     }
 }

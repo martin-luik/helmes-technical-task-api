@@ -48,13 +48,13 @@ class CategoryControllerTest {
         category.setName("Test1");
         category.setStatus(true);
 
-        List<CategoryTreeDto> expectedCategoryTreeDto = List.of(CategoryTreeDto.builder()
-                .id(category.getId())
-                .relationId(category.getRelationId())
-                .name(category.getName())
-                .status(category.getStatus())
-                .childCategories(Collections.emptyList())
-                .build());
+        List<CategoryTreeDto> expectedCategoryTreeDto = List.of(new CategoryTreeDto(
+                category.getId(),
+                category.getRelationId(),
+                category.getName(),
+                category.getStatus(),
+                Collections.emptyList()
+        ));
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/categories")
                 .accept(MediaType.APPLICATION_JSON);
@@ -89,19 +89,20 @@ class CategoryControllerTest {
         addedCategory.setName(newCategory.getName());
         addedCategory.setStatus(newCategory.getStatus());
 
-        List<CategoryTreeDto> expectedCategoryTreeDto = List.of(CategoryTreeDto.builder()
-                        .id(existingCategory.getId())
-                        .relationId(existingCategory.getRelationId())
-                        .name(existingCategory.getName())
-                        .status(existingCategory.getStatus())
-                        .childCategories(List.of(CategoryTreeDto.builder()
-                                .id(addedCategory.getId())
-                                .relationId(addedCategory.getRelationId())
-                                .name(addedCategory.getName())
-                                .status(addedCategory.getStatus())
-                                .childCategories(Collections.emptyList())
-                                .build()))
-                .build());
+        List<CategoryTreeDto> expectedCategoryTreeDto = List.of(new CategoryTreeDto(
+                existingCategory.getId(),
+                existingCategory.getRelationId(),
+                existingCategory.getName(),
+                existingCategory.getStatus(),
+                List.of(new CategoryTreeDto(
+                        addedCategory.getId(),
+                        addedCategory.getRelationId(),
+                        addedCategory.getName(),
+                        addedCategory.getStatus(),
+                        Collections.emptyList()
+                ))
+        ));
+
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/categories")
                 .accept(MediaType.APPLICATION_JSON)
@@ -232,19 +233,19 @@ class CategoryControllerTest {
         editedCategory.setName(editCategoryDto.getName());
         editedCategory.setStatus(existingCategory2.getStatus());
 
-        List<CategoryTreeDto> expectedCategoryTreeDto = List.of(CategoryTreeDto.builder()
-                .id(existingCategory1.getId())
-                .relationId(null)
-                .name(existingCategory1.getName())
-                .status(existingCategory1.getStatus())
-                .childCategories(List.of(CategoryTreeDto.builder()
-                        .id(existingCategory2.getId())
-                        .relationId(editedCategory.getRelationId())
-                        .name(editedCategory.getName())
-                        .status(existingCategory2.getStatus())
-                        .childCategories(Collections.emptyList())
-                        .build()))
-                .build());
+        List<CategoryTreeDto> expectedCategoryTreeDto = List.of(new CategoryTreeDto(
+                existingCategory1.getId(),
+                null,
+                existingCategory1.getName(),
+                existingCategory1.getStatus(),
+                List.of(new CategoryTreeDto(
+                        existingCategory2.getId(),
+                        editedCategory.getRelationId(),
+                        editedCategory.getName(),
+                        existingCategory2.getStatus(),
+                        Collections.emptyList()
+                ))
+        ));
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/categories")
                 .accept(MediaType.APPLICATION_JSON)

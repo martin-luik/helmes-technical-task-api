@@ -1,10 +1,14 @@
 package com.helmes.app.domain.industry.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Builder @Value @With
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CategoryTreeDto {
     Long id;
     Long relationId;
