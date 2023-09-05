@@ -1,10 +1,10 @@
 package com.helmes.app.domain.industry.controller;
 
-import com.helmes.app.common.exception.BusinessError;
-import com.helmes.app.common.exception.BusinessLogicException;
 import com.helmes.app.domain.industry.dto.AddCategoryDto;
 import com.helmes.app.domain.industry.dto.CategoryTreeDto;
 import com.helmes.app.domain.industry.dto.EditCategoryDto;
+import com.helmes.app.domain.industry.exception.BusinessError;
+import com.helmes.app.domain.industry.exception.BusinessLogicException;
 import com.helmes.app.domain.industry.model.Category;
 import com.helmes.app.domain.industry.service.CategoryService;
 import jakarta.validation.Valid;
@@ -28,7 +28,7 @@ public class CategoryController {
     @GetMapping("/categories")
     public ResponseEntity<List<CategoryTreeDto>> getAllCategories() {
         List<Category> categories = categoryService.getAll();
-        return new ResponseEntity<>(composeCategoryTreeDto(categories), HttpStatus.OK);
+        return new ResponseEntity<>(buildCategoryTreeDto(categories), HttpStatus.OK);
     }
 
     @PostMapping("/categories")
@@ -42,7 +42,7 @@ public class CategoryController {
 
         List<Category> categories = categoryService.getAll();
 
-        return new ResponseEntity<>(composeCategoryTreeDto(categories), HttpStatus.OK);
+        return new ResponseEntity<>(buildCategoryTreeDto(categories), HttpStatus.OK);
     }
 
     @PutMapping("/categories")
@@ -57,7 +57,7 @@ public class CategoryController {
 
         List<Category> categories = categoryService.getAll();
 
-        return new ResponseEntity<>(composeCategoryTreeDto(categories), HttpStatus.OK);
+        return new ResponseEntity<>(buildCategoryTreeDto(categories), HttpStatus.OK);
     }
 
     @DeleteMapping("/categories/{id}")
@@ -69,10 +69,10 @@ public class CategoryController {
 
         List<Category> categories = categoryService.getAll();
 
-        return new ResponseEntity<>(composeCategoryTreeDto(categories), HttpStatus.OK);
+        return new ResponseEntity<>(buildCategoryTreeDto(categories), HttpStatus.OK);
     }
 
-    private List<CategoryTreeDto> composeCategoryTreeDto(List<Category> categoryList) {
+    private List<CategoryTreeDto> buildCategoryTreeDto(List<Category> categoryList) {
         List<CategoryTreeDto> topLevelCategories = new ArrayList<>();
         for (Category category : categoryList) {
             if (category.getRelationId() == null) {

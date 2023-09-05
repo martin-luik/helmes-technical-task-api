@@ -1,7 +1,5 @@
 package com.helmes.app.domain.industry.service;
 
-import com.helmes.app.common.exception.BusinessError;
-import com.helmes.app.common.exception.BusinessLogicException;
 import com.helmes.app.domain.industry.model.Category;
 import com.helmes.app.domain.industry.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static java.lang.String.format;
@@ -18,26 +17,42 @@ import static java.lang.String.format;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
+    @Transactional(readOnly = true)
     public Optional<Category> getById(Long id) {
         return categoryRepository.findById(id);
     }
 
+    @Transactional(readOnly = true)
     public List<Category> getAll() {
         return categoryRepository.findAll();
     }
 
+    private void validate(Category category) {
+        Objects.requireNonNull(category, "Category must be not null");
+        Objects.requireNonNull(category.getName(), "Category name cannot be empty");
+        Objects.requireNonNull(category.getStatus(), "Category status cannot be empty");
+    }
+
+    private void validateWithCategoryId(Category category) {
+        validate(category);
+        Objects.requireNonNull(category.getId(), "Category id cannot be empty");
+    }
+
     @Transactional
     public void add(Category category) {
+        validate(category);
         categoryRepository.save(category);
     }
 
     @Transactional
     public void edit(Category category) {
+        validateWithCategoryId(category);
+
         Long categoryRelationId = category.getRelationId();
 
         if (categoryRelationId != null) {
             getById(categoryRelationId)
-                    .orElseThrow(() -> new IllegalStateException(format("Category with relation [id: %d] not found", categoryRelationId )));
+                    .orElseThrow(() -> new IllegalStateException(format("Category with relation [id: %d] not found", categoryRelationId)));
         }
 
         if (isChildCategory(category)) {
@@ -71,6 +86,8 @@ public class CategoryService {
 
     @Transactional
     public void delete(Category category) {
+        validateWithCategoryId(category);
+
         deleteRootCategory(category);
     }
 

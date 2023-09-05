@@ -1,5 +1,6 @@
 package com.helmes.app.common.exception;
 
+import com.helmes.app.domain.industry.exception.BusinessLogicException;
 import lombok.Builder;
 import lombok.Value;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ public class ControllerExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ValidationErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
         List<String> errors = new ArrayList<>();
 
@@ -31,7 +32,7 @@ public class ControllerExceptionHandler {
             errors.add(globalError.getDefaultMessage());
         });
 
-        ValidationErrorResponse errorResponse = ValidationErrorResponse.builder()
+        ErrorResponse errorResponse = ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message("Validation error")
                 .errors(errors)
@@ -42,8 +43,8 @@ public class ControllerExceptionHandler {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(BusinessLogicException.class)
-    public ResponseEntity<ValidationErrorResponse> handleBusinessLogicException(BusinessLogicException ex) {
-        ValidationErrorResponse errorResponse = ValidationErrorResponse.builder()
+    public ResponseEntity<ErrorResponse> handleBusinessLogicException(BusinessLogicException ex) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message(ex.getMessage())
                 .errors(Collections.singletonList(ex.getMessage()))
@@ -53,7 +54,7 @@ public class ControllerExceptionHandler {
     }
 
     @Builder @Value
-    public static class ValidationErrorResponse {
+    public static class ErrorResponse {
         int status;
         String message;
         List<String> errors;

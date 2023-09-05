@@ -11,7 +11,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
@@ -80,17 +81,81 @@ class CategoryServiceTest {
     }
 
     @Test
-    void edit() {
+    void add_categoryIsNull() {
+        assertThatThrownBy(() -> categoryService.add(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("Category must be not null");
+    }
+
+    @Test
+    void add_categoryNameIsNull() {
+        assertThatThrownBy(() -> categoryService.add(new Category()))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("Category name cannot be empty");
+    }
+
+    @Test
+    void add_categoryStatusIsNull() {
         Category category = new Category();
         category.setName("Test");
-        category.setRelationId(1L);
+        assertThatThrownBy(() -> categoryService.add(category))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("Category status cannot be empty");
+    }
+
+    @Test
+    void edit() {
+        Category category1 = new Category();
+        category1.setId(1L);
+        category1.setName("Test");
+        category1.setStatus(true);
+
+        Category category2 = new Category();
+        category2.setId(11L);
+        category2.setRelationId(1L);
+        category2.setName("Test2");
+        category2.setStatus(true);
+
+
+        doReturn(List.of(category2)).when(categoryRepository).findAllByRelationId(1L);
+
+        categoryService.edit(category1);
+
+        verify(categoryRepository).save(category2);
+    }
+
+    @Test
+    void edit_categoryIsNull() {
+        assertThatThrownBy(() -> categoryService.edit(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("Category must be not null");
+    }
+
+    @Test
+    void edit_categoryNameIsNull() {
+        assertThatThrownBy(() -> categoryService.edit(new Category()))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("Category name cannot be empty");
+    }
+
+    @Test
+    void edit_categoryStatusIsNull() {
+        Category category = new Category();
+        category.setName("Test");
+        assertThatThrownBy(() -> categoryService.edit(category))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("Category status cannot be empty");
+    }
+
+    @Test
+    void edit_categoryIdIsNull() {
+        Category category = new Category();
+        category.setName("Test");
         category.setStatus(true);
 
-        doReturn(Optional.of(category)).when(categoryRepository).findById(1L);
-
-        categoryService.edit(category);
-
-        verify(categoryRepository).save(category);
+        assertThatThrownBy(() -> categoryService.edit(category))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("Category id cannot be empty");
     }
 
     @Test
@@ -104,5 +169,39 @@ class CategoryServiceTest {
         categoryService.delete(category);
 
         verify(categoryRepository).delete(category);
+    }
+
+    @Test
+    void delete_categoryIsNull() {
+        assertThatThrownBy(() -> categoryService.delete(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("Category must be not null");
+    }
+
+    @Test
+    void delete_categoryNameIsNull() {
+        assertThatThrownBy(() -> categoryService.delete(new Category()))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("Category name cannot be empty");
+    }
+
+    @Test
+    void delete_categoryStatusIsNull() {
+        Category category = new Category();
+        category.setName("Test");
+        assertThatThrownBy(() -> categoryService.delete(category))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("Category status cannot be empty");
+    }
+
+    @Test
+    void delete_categoryIdIsNull() {
+        Category category = new Category();
+        category.setName("Test");
+        category.setStatus(true);
+
+        assertThatThrownBy(() -> categoryService.delete(category))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("Category id cannot be empty");
     }
 }

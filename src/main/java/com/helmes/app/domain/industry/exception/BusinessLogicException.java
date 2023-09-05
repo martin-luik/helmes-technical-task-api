@@ -1,4 +1,4 @@
-package com.helmes.app.common.exception;
+package com.helmes.app.domain.industry.exception;
 
 import lombok.Getter;
 

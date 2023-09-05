@@ -1,6 +1,5 @@
 package com.helmes.app.domain.industry.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.helmes.app.common.exception.ControllerExceptionHandler;
 import com.helmes.app.domain.industry.dto.AddCategoryDto;
@@ -11,31 +10,23 @@ import com.helmes.app.domain.industry.model.Category;
 import com.helmes.app.domain.industry.service.CategoryService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(value = CategoryController.class)
@@ -134,7 +125,7 @@ class CategoryControllerTest {
         addCategoryDto.setRelationId(1L);
         addCategoryDto.setName("Test");
 
-        ControllerExceptionHandler.ValidationErrorResponse validationErrorResponse = ControllerExceptionHandler.ValidationErrorResponse.builder()
+        ControllerExceptionHandler.ErrorResponse errorResponse = ControllerExceptionHandler.ErrorResponse.builder()
                 .status(400)
                 .message("Validation error")
                 .errors(List.of("error.validation.category.status"))
@@ -147,7 +138,7 @@ class CategoryControllerTest {
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        assertEquals(objectMapper.writeValueAsString(validationErrorResponse), result.getResponse().getContentAsString());
+        assertEquals(objectMapper.writeValueAsString(errorResponse), result.getResponse().getContentAsString());
     }
 
     @Test
@@ -157,7 +148,7 @@ class CategoryControllerTest {
         addCategoryDto.setName("Test");
         addCategoryDto.setStatus(false);
 
-        ControllerExceptionHandler.ValidationErrorResponse validationErrorResponse = ControllerExceptionHandler.ValidationErrorResponse.builder()
+        ControllerExceptionHandler.ErrorResponse errorResponse = ControllerExceptionHandler.ErrorResponse.builder()
                 .status(400)
                 .message("Validation error")
                 .errors(List.of("error.validation.category.status"))
@@ -170,7 +161,7 @@ class CategoryControllerTest {
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        assertEquals(objectMapper.writeValueAsString(validationErrorResponse), result.getResponse().getContentAsString());
+        assertEquals(objectMapper.writeValueAsString(errorResponse), result.getResponse().getContentAsString());
     }
 
     @Test
@@ -180,7 +171,7 @@ class CategoryControllerTest {
         addCategoryDto.setName("");
         addCategoryDto.setStatus(true);
 
-        ControllerExceptionHandler.ValidationErrorResponse validationErrorResponse = ControllerExceptionHandler.ValidationErrorResponse.builder()
+        ControllerExceptionHandler.ErrorResponse errorResponse = ControllerExceptionHandler.ErrorResponse.builder()
                 .status(400)
                 .message("Validation error")
                 .errors(List.of("error.validation.category.name"))
@@ -193,7 +184,7 @@ class CategoryControllerTest {
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        assertEquals(objectMapper.writeValueAsString(validationErrorResponse), result.getResponse().getContentAsString());
+        assertEquals(objectMapper.writeValueAsString(errorResponse), result.getResponse().getContentAsString());
     }
 
     @Test
@@ -202,7 +193,7 @@ class CategoryControllerTest {
         addCategoryDto.setRelationId(1L);
         addCategoryDto.setStatus(true);
 
-        ControllerExceptionHandler.ValidationErrorResponse validationErrorResponse = ControllerExceptionHandler.ValidationErrorResponse.builder()
+        ControllerExceptionHandler.ErrorResponse errorResponse = ControllerExceptionHandler.ErrorResponse.builder()
                 .status(400)
                 .message("Validation error")
                 .errors(List.of("error.validation.category.name"))
@@ -215,7 +206,7 @@ class CategoryControllerTest {
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        assertEquals(objectMapper.writeValueAsString(validationErrorResponse), result.getResponse().getContentAsString());
+        assertEquals(objectMapper.writeValueAsString(errorResponse), result.getResponse().getContentAsString());
     }
 
     @Test
@@ -280,7 +271,7 @@ class CategoryControllerTest {
         editCategoryDto.setRelationId(1L);
         editCategoryDto.setName("Test");
 
-        ControllerExceptionHandler.ValidationErrorResponse validationErrorResponse = ControllerExceptionHandler.ValidationErrorResponse.builder()
+        ControllerExceptionHandler.ErrorResponse errorResponse = ControllerExceptionHandler.ErrorResponse.builder()
                 .status(400)
                 .message("Category not exists")
                 .errors(List.of("Category not exists"))
@@ -295,7 +286,7 @@ class CategoryControllerTest {
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        assertEquals(objectMapper.writeValueAsString(validationErrorResponse), result.getResponse().getContentAsString());
+        assertEquals(objectMapper.writeValueAsString(errorResponse), result.getResponse().getContentAsString());
     }
 
     @Test
@@ -305,7 +296,7 @@ class CategoryControllerTest {
         editCategoryDto.setRelationId(1L);
         editCategoryDto.setName("");
 
-        ControllerExceptionHandler.ValidationErrorResponse validationErrorResponse = ControllerExceptionHandler.ValidationErrorResponse.builder()
+        ControllerExceptionHandler.ErrorResponse errorResponse = ControllerExceptionHandler.ErrorResponse.builder()
                 .status(400)
                 .message("Validation error")
                 .errors(List.of("error.validation.category.name"))
@@ -318,7 +309,7 @@ class CategoryControllerTest {
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        assertEquals(objectMapper.writeValueAsString(validationErrorResponse), result.getResponse().getContentAsString());
+        assertEquals(objectMapper.writeValueAsString(errorResponse), result.getResponse().getContentAsString());
     }
 
     @Test
@@ -352,7 +343,7 @@ class CategoryControllerTest {
         DeleteCategoryDto deleteCategoryDto = new DeleteCategoryDto();
         deleteCategoryDto.setId(1L);
 
-        ControllerExceptionHandler.ValidationErrorResponse validationErrorResponse = ControllerExceptionHandler.ValidationErrorResponse.builder()
+        ControllerExceptionHandler.ErrorResponse errorResponse = ControllerExceptionHandler.ErrorResponse.builder()
                 .status(400)
                 .message("Category not exists")
                 .errors(List.of("Category not exists"))
@@ -365,6 +356,6 @@ class CategoryControllerTest {
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        assertEquals(objectMapper.writeValueAsString(validationErrorResponse), result.getResponse().getContentAsString());
+        assertEquals(objectMapper.writeValueAsString(errorResponse), result.getResponse().getContentAsString());
     }
 }
