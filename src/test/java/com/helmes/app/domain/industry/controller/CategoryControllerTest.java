@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.helmes.app.common.exception.ControllerExceptionHandler;
 import com.helmes.app.domain.industry.dto.AddCategoryDto;
 import com.helmes.app.domain.industry.dto.CategoryTreeDto;
-import com.helmes.app.domain.industry.dto.DeleteCategoryDto;
 import com.helmes.app.domain.industry.dto.EditCategoryDto;
 import com.helmes.app.domain.industry.model.Category;
 import com.helmes.app.domain.industry.service.CategoryService;
@@ -320,16 +319,13 @@ class CategoryControllerTest {
         existingCategory.setName("test1");
         existingCategory.setStatus(true);
 
-        DeleteCategoryDto deleteCategoryDto = new DeleteCategoryDto();
-        deleteCategoryDto.setId(existingCategory.getId());
-
         List<CategoryTreeDto> expectedCategoryTreeDto = Collections.emptyList();
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/categories/" + deleteCategoryDto.getId())
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/categories/" + existingCategory.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
-        doReturn(Optional.of(existingCategory)).when(categoryService).getById(deleteCategoryDto.getId());
+        doReturn(Optional.of(existingCategory)).when(categoryService).getById(existingCategory.getId());
 
         doReturn(Collections.emptyList()).when(categoryService).getAll();
 
@@ -341,19 +337,15 @@ class CategoryControllerTest {
 
     @Test
     void delete_Return400_WhenIdIsEmpty() throws Exception {
-        DeleteCategoryDto deleteCategoryDto = new DeleteCategoryDto();
-        deleteCategoryDto.setId(1L);
-
         ControllerExceptionHandler.ErrorResponse errorResponse = ControllerExceptionHandler.ErrorResponse.builder()
                 .status(400)
                 .message("Category not exists")
                 .errors(List.of("Category not exists"))
                 .build();
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/categories/" + deleteCategoryDto.getId())
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/categories/" + 1L)
                 .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(deleteCategoryDto));
+                .contentType(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
