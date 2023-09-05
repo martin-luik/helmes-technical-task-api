@@ -87,10 +87,10 @@ public class CategoryService {
             categoryRepository.save(currentCategory);
 
             List<Category> childCategories = categoryRepository.findAllByRelationId(currentCategory.getId());
-            for (Category childCategory : childCategories) {
+            childCategories.forEach(childCategory -> {
                 childCategory.setRelationId(currentCategory.getId());
                 queue.add(childCategory);
-            }
+            });
         }
     }
 

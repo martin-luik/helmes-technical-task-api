@@ -14,10 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Validated
@@ -75,31 +72,45 @@ public class CategoryController {
     }
 
     private List<CategoryTreeDto> buildCategoryTreeDto(List<Category> categoryList) {
-        List<CategoryTreeDto> topLevelCategories = new ArrayList<>();
-        for (Category category : categoryList) {
-            if (category.getRelationId() == null) {
-                topLevelCategories.add(composeTree(category, categoryList));
-            }
-        }
-
-        topLevelCategories.sort(Comparator.comparing(CategoryTreeDto::getName));
-        return topLevelCategories;
-    }
-
-    private CategoryTreeDto composeTree(Category parentCategory, List<Category> categoryList) {
-        CategoryTreeDto categoryTreeDto = new CategoryTreeDto();
-        categoryTreeDto.setId(parentCategory.getId());
-        categoryTreeDto.setRelationId(parentCategory.getRelationId());
-        categoryTreeDto.setName(parentCategory.getName());
-        categoryTreeDto.setStatus(parentCategory.getStatus());
-
-        List<CategoryTreeDto> childCategoryTreeDto = categoryList.stream()
-                .filter(category -> Objects.equals(category.getRelationId(), parentCategory.getId()))
+        return categoryList.stream()
+                .filter(category -> category.getRelationId() == null)
                 .map(category -> composeTree(category, categoryList))
                 .sorted(Comparator.comparing(CategoryTreeDto::getName))
                 .collect(Collectors.toList());
+    }
 
-        categoryTreeDto.setChildCategories(childCategoryTreeDto);
-        return categoryTreeDto;
+    private CategoryTreeDto composeTree(Category rootCategory, List<Category> categoryList) {
+        Map<Long, CategoryTreeDto> categoryMap = new HashMap<>();
+        Deque<Category> categoryDeque = new LinkedList<>();
+        CategoryTreeDto categoryTreeDtoRoot = new CategoryTreeDto();
+
+        categoryDeque.push(rootCategory);
+        categoryMap.put(rootCategory.getId(), categoryTreeDtoRoot);
+
+        while (!categoryDeque.isEmpty()) {
+            Category currentCategory = categoryDeque.pop();
+            CategoryTreeDto currentTreeDto = categoryMap.get(currentCategory.getId());
+
+            currentTreeDto.setId(currentCategory.getId());
+            currentTreeDto.setRelationId(currentCategory.getRelationId());
+            currentTreeDto.setName(currentCategory.getName());
+            currentTreeDto.setStatus(currentCategory.getStatus());
+
+            List<CategoryTreeDto> childCategoryTreeDto = new ArrayList<>();
+
+            categoryList.stream()
+                    .filter(category -> Objects.equals(category.getRelationId(), currentCategory.getId()))
+                    .forEach(category -> {
+                        CategoryTreeDto childTreeDto = new CategoryTreeDto();
+                        childCategoryTreeDto.add(childTreeDto);
+                        categoryMap.put(category.getId(), childTreeDto);
+                        categoryDeque.push(category);
+                    });
+
+            childCategoryTreeDto.sort(Comparator.comparing(dto -> dto.getName() != null ? dto.getName() : ""));
+            currentTreeDto.setChildCategories(childCategoryTreeDto);
+        }
+
+        return categoryTreeDtoRoot;
     }
 }
