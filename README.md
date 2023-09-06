@@ -60,7 +60,7 @@ If you are using IntelliJ IDEA, you can set up Run/Debug configurations for easy
 3. For normal run configuration:
     - Set the **Name** to a meaningful identifier.
     - Select the appropriate **Java version**.
-    - Set the **Module** to "app".
+    - Set the **Module** to "app.main".
     - Set the **Main class** to "com.helmes.app.AppApplication".
     - Set the **Active profiles** to "dev".
 
