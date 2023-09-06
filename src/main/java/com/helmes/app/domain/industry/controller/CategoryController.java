@@ -128,7 +128,7 @@ public class CategoryController {
             List<CategoryTreeDto> childCategories = current.getChildCategories();
 
             if (childCategories != null && !childCategories.isEmpty()) {
-                childCategories.sort(Comparator.comparing(dto -> dto.getName() != null ? dto.getName() : ""));
+                childCategories.sort(Comparator.comparing(dto -> Optional.ofNullable(dto.getName()).orElse("")));
 
                 for (int i = childCategories.size() - 1; i >= 0; i--) {
                     stack.push(childCategories.get(i));
