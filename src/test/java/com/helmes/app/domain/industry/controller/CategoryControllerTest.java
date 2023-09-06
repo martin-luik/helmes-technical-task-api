@@ -42,27 +42,82 @@ class CategoryControllerTest {
 
     @Test
     void get() throws Exception {
-        Category category = new Category();
-        category.setId(1L);
-        category.setName("Test1");
-        category.setStatus(true);
+        Category category1 = new Category();
+        category1.setId(1L);
+        category1.setRelationId(null);
+        category1.setName("Manufacturing");
+        category1.setStatus(true);
 
-        List<CategoryTreeDto> expectedCategoryTreeDto = List.of(new CategoryTreeDto(
-                category.getId(),
-                category.getRelationId(),
-                category.getName(),
-                category.getStatus(),
-                Collections.emptyList()
-        ));
+        Category category2 = new Category();
+        category2.setId(2L);
+        category2.setRelationId(1L);
+        category2.setName("Construction materials");
+        category2.setStatus(true);
+
+        Category category3 = new Category();
+        category3.setId(4L);
+        category3.setRelationId(1L);
+        category3.setName("Food and Beverage");
+        category3.setStatus(true);
+
+        Category category4 = new Category();
+        category4.setId(5L);
+        category4.setRelationId(4L);
+        category4.setName("Bakery & confectionery products");
+        category4.setStatus(true);
+
+        Category category5 = new Category();
+        category5.setId(7L);
+        category5.setRelationId(4L);
+        category5.setName("Beverages");
+        category5.setStatus(true);
+
+        Category category6 = new Category();
+        category6.setId(64L);
+        category6.setRelationId(null);
+        category6.setName("Other");
+        category6.setStatus(true);
+
+        Category category7 = new Category();
+        category7.setId(65L);
+        category7.setRelationId(64L);
+        category7.setName("Creative industries");
+        category7.setStatus(true);
+
+        Category category8 = new Category();
+        category8.setId(66L);
+        category8.setRelationId(64L);
+        category8.setName("Energy technology");
+        category8.setStatus(true);
+
+        Category category9 = new Category();
+        category9.setId(67L);
+        category9.setRelationId(64L);
+        category9.setName("Environment");
+        category9.setStatus(true);
+
+        List<Category> categories = List.of(
+                category1,
+                category2,
+                category3,
+                category4,
+                category5,
+                category6,
+                category7,
+                category8,
+                category9
+        );
+
+        String expectedCategoryTree = "[{\"id\":1,\"relationId\":null,\"name\":\"Manufacturing\",\"status\":true,\"childCategories\":[{\"id\":2,\"relationId\":1,\"name\":\"Construction materials\",\"status\":true,\"childCategories\":[]},{\"id\":4,\"relationId\":1,\"name\":\"Food and Beverage\",\"status\":true,\"childCategories\":[{\"id\":5,\"relationId\":4,\"name\":\"Bakery & confectionery products\",\"status\":true,\"childCategories\":[]},{\"id\":7,\"relationId\":4,\"name\":\"Beverages\",\"status\":true,\"childCategories\":[]}]}]},{\"id\":64,\"relationId\":null,\"name\":\"Other\",\"status\":true,\"childCategories\":[{\"id\":65,\"relationId\":64,\"name\":\"Creative industries\",\"status\":true,\"childCategories\":[]},{\"id\":66,\"relationId\":64,\"name\":\"Energy technology\",\"status\":true,\"childCategories\":[]},{\"id\":67,\"relationId\":64,\"name\":\"Environment\",\"status\":true,\"childCategories\":[]}]}]";
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/categories")
                 .accept(MediaType.APPLICATION_JSON);
 
-        doReturn(List.of(category)).when(categoryService).getAll();
+        doReturn(categories).when(categoryService).getAll();
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        assertEquals(objectMapper.writeValueAsString(expectedCategoryTreeDto), result.getResponse().getContentAsString());
+        assertEquals(expectedCategoryTree, result.getResponse().getContentAsString());
     }
 
     @Test
