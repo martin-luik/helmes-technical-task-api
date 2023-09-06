@@ -12,3 +12,21 @@ services:
       - ./database/init:/docker-entrypoint-initdb.d
     ports:
       - 5432:5432
+
+  redis:
+    image: redis
+    container_name: redis-container
+    command: bash -c "redis-server --appendonly yes --requirepass password"
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - redis-network
+
+volumes:
+  redis-data:
+
+networks:
+  redis-network:
+    driver: bridge

@@ -121,7 +121,7 @@ class CategoryServiceTest {
 
         categoryService.edit(category1);
 
-        verify(categoryRepository).save(category2);
+        verify(categoryRepository).saveAll(List.of(category1, category2));
     }
 
     @Test
@@ -168,7 +168,7 @@ class CategoryServiceTest {
 
         categoryService.delete(category);
 
-        verify(categoryRepository).delete(category);
+        verify(categoryRepository).deleteAll(List.of(category));
     }
 
     @Test

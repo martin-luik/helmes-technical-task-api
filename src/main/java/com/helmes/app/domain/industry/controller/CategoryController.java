@@ -41,7 +41,7 @@ public class CategoryController {
 
         List<Category> categories = categoryService.getAll();
 
-        return new ResponseEntity<>(buildCategoryTreeDto(categories), HttpStatus.OK);
+        return new ResponseEntity<>(buildCategoryTreeDto(categories), HttpStatus.CREATED);
     }
 
     @PutMapping("/categories")
@@ -79,6 +79,7 @@ public class CategoryController {
                 .collect(Collectors.toList());
     }
 
+
     private CategoryTreeDto composeTree(Category rootCategory, List<Category> categoryList) {
         Map<Long, CategoryTreeDto> categoryMap = new HashMap<>();
         Deque<Category> categoryDeque = new LinkedList<>();
@@ -107,10 +108,33 @@ public class CategoryController {
                         categoryDeque.push(category);
                     });
 
-            childCategoryTreeDto.sort(Comparator.comparing(dto -> dto.getName() != null ? dto.getName() : ""));
+            sortTree(categoryTreeDtoRoot);
             currentTreeDto.setChildCategories(childCategoryTreeDto);
         }
 
         return categoryTreeDtoRoot;
     }
+
+    private void sortTree(CategoryTreeDto root) {
+        if (root == null) {
+            return;
+        }
+
+        Stack<CategoryTreeDto> stack = new Stack<>();
+        stack.push(root);
+
+        while (!stack.isEmpty()) {
+            CategoryTreeDto current = stack.pop();
+            List<CategoryTreeDto> childCategories = current.getChildCategories();
+
+            if (childCategories != null && !childCategories.isEmpty()) {
+                childCategories.sort(Comparator.comparing(dto -> dto.getName() != null ? dto.getName() : ""));
+
+                for (int i = childCategories.size() - 1; i >= 0; i--) {
+                    stack.push(childCategories.get(i));
+                }
+            }
+        }
+    }
+
 }
