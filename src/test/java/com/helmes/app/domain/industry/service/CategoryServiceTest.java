@@ -104,6 +104,16 @@ class CategoryServiceTest {
     }
 
     @Test
+    void add_categoryStatusIsFalse() {
+        Category category = new Category();
+        category.setName("Test");
+        category.setStatus(false);
+        assertThatThrownBy(() -> categoryService.add(category))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Category status cannot be false");
+    }
+
+    @Test
     void edit() {
         Category category1 = new Category();
         category1.setId(1L);
@@ -145,6 +155,18 @@ class CategoryServiceTest {
         assertThatThrownBy(() -> categoryService.edit(category))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("Category status cannot be empty");
+    }
+
+    @Test
+    void edit_categoryStatusIsFalse() {
+        Category category = new Category();
+        category.setId(1L);
+        category.setName("Test");
+        category.setStatus(false);
+
+        assertThatThrownBy(() -> categoryService.edit(category))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Category status cannot be false");
     }
 
     @Test
@@ -192,6 +214,18 @@ class CategoryServiceTest {
         assertThatThrownBy(() -> categoryService.delete(category))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("Category status cannot be empty");
+    }
+
+    @Test
+    void delete_categoryStatusIsFalse() {
+        Category category = new Category();
+        category.setId(1L);
+        category.setName("Test");
+        category.setStatus(false);
+
+        assertThatThrownBy(() -> categoryService.delete(category))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("Category status cannot be false");
     }
 
     @Test

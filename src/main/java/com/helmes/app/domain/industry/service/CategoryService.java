@@ -17,6 +17,8 @@ import static java.lang.String.format;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
+    private static final String CATEGORY_CACHE = "categoryCache";
+
     private final CategoryRepository categoryRepository;
     private final CacheManager cacheManager;
 
@@ -24,6 +26,10 @@ public class CategoryService {
         Objects.requireNonNull(category, "Category must be not null");
         Objects.requireNonNull(category.getName(), "Category name cannot be empty");
         Objects.requireNonNull(category.getStatus(), "Category status cannot be empty");
+
+        if (!category.getStatus()) {
+            throw new IllegalStateException("Category status cannot be false");
+        }
     }
 
     private void validateWithCategoryId(Category category) {
@@ -43,20 +49,20 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "categoryCache")
+    @Cacheable(value = CATEGORY_CACHE)
     public List<Category> getAll() {
         return categoryRepository.findAll();
     }
 
     @Transactional
-    @CacheEvict(value = "categoryCache", allEntries = true)
+    @CacheEvict(value = CATEGORY_CACHE, allEntries = true)
     public void add(Category category) {
         validate(category);
         categoryRepository.save(category);
     }
 
     @Transactional
-    @CacheEvict(value = "categoryCache", allEntries = true)
+    @CacheEvict(value = CATEGORY_CACHE, allEntries = true)
     public void edit(Category category) {
         validateWithCategoryId(category);
 
@@ -112,7 +118,7 @@ public class CategoryService {
     }
 
     @Transactional
-    @CacheEvict(value = "categoryCache", allEntries = true)
+    @CacheEvict(value = CATEGORY_CACHE, allEntries = true)
     public void delete(Category category) {
         validateWithCategoryId(category);
         List<Category> categories = new ArrayList<>();
