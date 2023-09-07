@@ -1,7 +1,7 @@
 package com.helmes.app.domain.industry.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.helmes.app.common.exception.ControllerExceptionHandler;
+import com.helmes.app.common.ControllerExceptionHandler;
 import com.helmes.app.domain.industry.dto.AddCategoryDto;
 import com.helmes.app.domain.industry.dto.CategoryTreeDto;
 import com.helmes.app.domain.industry.dto.EditCategoryDto;
