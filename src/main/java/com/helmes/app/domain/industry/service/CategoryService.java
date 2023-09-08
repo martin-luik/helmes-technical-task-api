@@ -4,6 +4,7 @@ import com.helmes.app.domain.industry.model.Category;
 import com.helmes.app.domain.industry.repository.CategoryRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,6 +16,7 @@ import java.util.*;
 import static java.lang.String.format;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class CategoryService {
     private static final String CATEGORY_CACHE = "categoryCache";
@@ -57,6 +59,7 @@ public class CategoryService {
     @Transactional
     @CacheEvict(value = CATEGORY_CACHE, allEntries = true)
     public void add(Category category) {
+        log.info("Adding category: {}", category);
         validate(category);
         categoryRepository.save(category);
     }
@@ -64,6 +67,7 @@ public class CategoryService {
     @Transactional
     @CacheEvict(value = CATEGORY_CACHE, allEntries = true)
     public void edit(Category category) {
+        log.info("Editing category: {}", category);
         validateWithCategoryId(category);
 
         Long categoryRelationId = category.getRelationId();
@@ -107,6 +111,8 @@ public class CategoryService {
             Category currentCategory = queue.poll();
             categories.add(currentCategory);
 
+            log.info("Processing category: {}", currentCategory);
+
             List<Category> childCategories = categoryRepository.findAllByRelationId(currentCategory.getId());
             childCategories.forEach(childCategory -> {
                 childCategory.setRelationId(currentCategory.getId());
@@ -120,6 +126,7 @@ public class CategoryService {
     @Transactional
     @CacheEvict(value = CATEGORY_CACHE, allEntries = true)
     public void delete(Category category) {
+        log.info("Deleting category: {}", category);
         validateWithCategoryId(category);
         List<Category> categories = new ArrayList<>();
 
@@ -129,6 +136,8 @@ public class CategoryService {
         while (!categoryQueue.isEmpty()) {
             Category currentCategory = categoryQueue.poll();
             categories.add(currentCategory);
+
+            log.info("Processing category: {}", currentCategory);
 
             List<Category> childCategories = categoryRepository.findAllByRelationId(currentCategory.getId());
             categoryQueue.addAll(childCategories);
