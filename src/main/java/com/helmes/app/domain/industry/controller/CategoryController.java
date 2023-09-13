@@ -15,7 +15,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Validated
 @RestController
@@ -76,7 +75,7 @@ public class CategoryController {
                 .filter(category -> category.getRelationId() == null)
                 .map(category -> composeTree(category, categoryList))
                 .sorted(Comparator.comparing(CategoryTreeDto::getName))
-                .collect(Collectors.toList());
+                .toList();
     }
 
 
@@ -120,7 +119,7 @@ public class CategoryController {
             return;
         }
 
-        Stack<CategoryTreeDto> stack = new Stack<>();
+        Deque<CategoryTreeDto> stack = new LinkedList<>();
         stack.push(root);
 
         while (!stack.isEmpty()) {

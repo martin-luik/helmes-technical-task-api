@@ -29,7 +29,7 @@ public class CategoryService {
         Objects.requireNonNull(category.getName(), "Category name cannot be empty");
         Objects.requireNonNull(category.getStatus(), "Category status cannot be empty");
 
-        if (!category.getStatus()) {
+        if (Boolean.FALSE.equals(category.getStatus())) {
             throw new IllegalStateException("Category status cannot be false");
         }
     }
@@ -41,7 +41,7 @@ public class CategoryService {
 
     @PostConstruct
     public void initializeCache() {
-        Objects.requireNonNull(cacheManager.getCache("categoryCache")).clear();
+        Objects.requireNonNull(cacheManager.getCache(CATEGORY_CACHE)).clear();
 
     }
 
@@ -72,9 +72,8 @@ public class CategoryService {
 
         Long categoryRelationId = category.getRelationId();
 
-        if (categoryRelationId != null) {
-            getById(categoryRelationId)
-                    .orElseThrow(() -> new IllegalStateException(format("Category with relation [id: %d] not found", categoryRelationId)));
+        if (categoryRelationId != null && getById(categoryRelationId).isEmpty()) {
+            throw new IllegalStateException(format("Category with relation [id: %d] not found", categoryRelationId));
         }
 
         if (isChildCategory(category)) {
