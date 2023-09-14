@@ -107,31 +107,24 @@ public class CategoryController {
                         categoryDeque.push(category);
                     });
 
-            sortTree(categoryTreeDtoRoot);
+            sortCategoryTreeDtoRoot(categoryTreeDtoRoot);
             currentTreeDto.setChildCategories(childCategoryTreeDto);
         }
 
         return categoryTreeDtoRoot;
     }
 
-    private void sortTree(CategoryTreeDto root) {
-        if (root == null) {
-            return;
-        }
+    private void sortCategoryTreeDtoRoot(CategoryTreeDto root) {
+        Deque<CategoryTreeDto> categoryTreeDtoDeque = new LinkedList<>();
+        categoryTreeDtoDeque.push(root);
 
-        Deque<CategoryTreeDto> stack = new LinkedList<>();
-        stack.push(root);
-
-        while (!stack.isEmpty()) {
-            CategoryTreeDto current = stack.pop();
+        while (!categoryTreeDtoDeque.isEmpty()) {
+            CategoryTreeDto current = categoryTreeDtoDeque.pop();
             List<CategoryTreeDto> childCategories = current.getChildCategories();
 
             if (childCategories != null && !childCategories.isEmpty()) {
                 childCategories.sort(Comparator.comparing(dto -> Optional.ofNullable(dto.getName()).orElse("")));
-
-                for (int i = childCategories.size() - 1; i >= 0; i--) {
-                    stack.push(childCategories.get(i));
-                }
+                childCategories.forEach(categoryTreeDtoDeque::push);
             }
         }
     }
