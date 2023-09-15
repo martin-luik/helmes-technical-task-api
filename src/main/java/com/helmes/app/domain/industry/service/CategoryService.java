@@ -92,7 +92,7 @@ public class CategoryService {
 
             List<Category> childCategories = categoryRepository.findAllByRelationId(currentCategory.getId());
             for (Category childCategory : childCategories) {
-                if (childCategory.getId().equals(currentCategory.getRelationId())) {
+                if (childCategory.getId().equals(category.getRelationId())) {
                     return true;
                 }
                 queue.add(childCategory);
