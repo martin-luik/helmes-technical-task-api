@@ -73,13 +73,13 @@ public class CategoryController {
     private List<CategoryTreeDto> buildCategoryTreeDto(List<Category> categoryList) {
         return categoryList.stream()
                 .filter(category -> category.getRelationId() == null)
-                .map(category -> composeTree(category, categoryList))
+                .map(category -> composeCategoryTreeDtoTree(category, categoryList))
                 .sorted(Comparator.comparing(CategoryTreeDto::getName))
                 .toList();
     }
 
 
-    private CategoryTreeDto composeTree(Category rootCategory, List<Category> categoryList) {
+    private CategoryTreeDto composeCategoryTreeDtoTree(Category rootCategory, List<Category> categoryList) {
         Map<Long, CategoryTreeDto> categoryMap = new HashMap<>();
         Deque<Category> categoryDeque = new LinkedList<>();
         CategoryTreeDto categoryTreeDtoRoot = new CategoryTreeDto();
@@ -107,14 +107,13 @@ public class CategoryController {
                         categoryDeque.push(category);
                     });
 
-            sortCategoryTreeDtoRoot(categoryTreeDtoRoot);
             currentTreeDto.setChildCategories(childCategoryTreeDto);
         }
 
-        return categoryTreeDtoRoot;
+        return sortCategoryTreeDtoRoot(categoryTreeDtoRoot);
     }
 
-    private void sortCategoryTreeDtoRoot(CategoryTreeDto root) {
+    private CategoryTreeDto sortCategoryTreeDtoRoot(CategoryTreeDto root) {
         Deque<CategoryTreeDto> categoryTreeDtoDeque = new LinkedList<>();
         categoryTreeDtoDeque.push(root);
 
@@ -124,9 +123,11 @@ public class CategoryController {
 
             if (childCategories != null && !childCategories.isEmpty()) {
                 childCategories.sort(Comparator.comparing(dto -> Optional.ofNullable(dto.getName()).orElse("")));
-                childCategories.forEach(categoryTreeDtoDeque::push);
+                categoryTreeDtoDeque.addAll(childCategories);
             }
         }
+
+        return root;
     }
 
 }
