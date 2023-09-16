@@ -5,26 +5,19 @@
   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
     <changeSet author="martin.luik" id="2023-09-02.1">
         <sql>
-            create table if not exists CATEGORY
-            (
-                ID          bigserial
-                    constraint category_pk
-                        primary key,
-                RELATION_ID bigint,
-                NAME        varchar not null,
-                STATUS      boolean not null,
-                UPDATED_AT       timestamptz not null default CURRENT_TIMESTAMP,
-                CREATED_AT       timestamptz not null default CURRENT_TIMESTAMP
+            CREATE TABLE IF NOT EXISTS CATEGORY (
+                                                    ID          bigserial CONSTRAINT category_pk PRIMARY KEY,
+                                                    RELATION_ID bigint,
+                                                    NAME        varchar NOT NULL,
+                                                    STATUS      boolean NOT NULL,
+                                                    UPDATED_AT  timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                                    CREATED_AT  timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
 
-            alter table CATEGORY
-                owner to dev_db;
+            ALTER TABLE CATEGORY OWNER TO dev_db;
 
-            create unique index category_id_uindex
-                on CATEGORY (id);
-
-            create index category_relation_id_index
-                on CATEGORY (relation_id);
+            CREATE UNIQUE INDEX category_id_uindex ON CATEGORY (id);
+            CREATE INDEX category_relation_id_index ON CATEGORY (relation_id);
         </sql>
     </changeSet>
 </databaseChangeLog>
