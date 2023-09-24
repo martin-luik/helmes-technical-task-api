@@ -32,3 +32,4 @@ server:
     enabled-protocols: TLSv1.2
   servlet:
     context-path: /api
+  port: 9090

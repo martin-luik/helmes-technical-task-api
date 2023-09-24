@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: industry-app-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: industry-app
+  template:
+    metadata:
+      labels:
+        app: industry-app
+    spec:
+      containers:
+        - name: industry-app
+          image: main-docker-registry/industry-app:tag
+          command: ["java","-jar","/app-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=pro"]
