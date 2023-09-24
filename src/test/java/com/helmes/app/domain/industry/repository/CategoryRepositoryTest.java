@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,6 +26,8 @@ class CategoryRepositoryTest {
         Category expectedCategory = new Category();
         expectedCategory.setName("Test");
         expectedCategory.setStatus(true);
+        expectedCategory.setCreatedAt(new Date());
+        expectedCategory.setUpdatedAt(new Date());
 
         Category result = categoryRepository.save(expectedCategory);
 
@@ -38,6 +41,8 @@ class CategoryRepositoryTest {
         Category category1 = new Category();
         category1.setName("Test1");
         category1.setStatus(true);
+        category1.setCreatedAt(new Date());
+        category1.setUpdatedAt(new Date());
 
         Category expectedCategory1 = categoryRepository.save(category1);
 
@@ -45,6 +50,8 @@ class CategoryRepositoryTest {
         category2.setRelationId(expectedCategory1.getId());
         category2.setName("Test2");
         category2.setStatus(true);
+        category2.setCreatedAt(new Date());
+        category2.setUpdatedAt(new Date());
 
         Category expectedCategory2 = categoryRepository.save(category2);
 
@@ -59,6 +66,8 @@ class CategoryRepositoryTest {
         Category category = new Category();
         category.setName("Test3");
         category.setStatus(true);
+        category.setCreatedAt(new Date());
+        category.setUpdatedAt(new Date());
 
         Category savedCategory = categoryRepository.save(category);
 
@@ -72,6 +81,8 @@ class CategoryRepositoryTest {
         Category category1 = new Category();
         category1.setName("Test1");
         category1.setStatus(true);
+        category1.setCreatedAt(new Date());
+        category1.setUpdatedAt(new Date());
 
         Category expectedCategory1 = categoryRepository.save(category1);
 
@@ -79,6 +90,8 @@ class CategoryRepositoryTest {
         category2.setRelationId(expectedCategory1.getId());
         category2.setName("Test2");
         category2.setStatus(true);
+        category2.setCreatedAt(new Date());
+        category2.setUpdatedAt(new Date());
 
         Category expectedCategory2 = categoryRepository.save(category2);
 
