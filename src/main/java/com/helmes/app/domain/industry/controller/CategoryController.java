@@ -14,7 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 @Validated
 @RestController
@@ -78,55 +80,21 @@ public class CategoryController {
                 .toList();
     }
 
-    private CategoryTreeDto composeCategoryTreeDto(Category rootCategory, List<Category> categoryList) {
-        Map<Long, CategoryTreeDto> categoryMap = new HashMap<>();
-        Deque<Category> categoryDeque = new LinkedList<>();
-        CategoryTreeDto categoryTreeDtoRoot = new CategoryTreeDto();
+    private CategoryTreeDto composeCategoryTreeDto(Category parentCategory, List<Category> categoryList) {
+        CategoryTreeDto categoryTreeDto = new CategoryTreeDto();
+        categoryTreeDto.setId(parentCategory.getId());
+        categoryTreeDto.setRelationId(parentCategory.getRelationId());
+        categoryTreeDto.setName(parentCategory.getName());
+        categoryTreeDto.setStatus(parentCategory.getStatus());
 
-        categoryDeque.push(rootCategory);
-        categoryMap.put(rootCategory.getId(), categoryTreeDtoRoot);
+        List<CategoryTreeDto> childCategoryTreeDto = new ArrayList<>();
 
-        while (!categoryDeque.isEmpty()) {
-            Category currentCategory = categoryDeque.pop();
-            CategoryTreeDto currentTreeDto = categoryMap.get(currentCategory.getId());
+        categoryList.stream()
+                .filter(category -> category.getRelationId() != null && category.getRelationId().equals(parentCategory.getId()))
+                .forEach(category -> childCategoryTreeDto.add(composeCategoryTreeDto(category, categoryList)));
 
-            currentTreeDto.setId(currentCategory.getId());
-            currentTreeDto.setRelationId(currentCategory.getRelationId());
-            currentTreeDto.setName(currentCategory.getName());
-            currentTreeDto.setStatus(currentCategory.getStatus());
-
-            List<CategoryTreeDto> childCategoryTreeDto = new ArrayList<>();
-
-            categoryList.stream()
-                    .filter(category -> Objects.equals(category.getRelationId(), currentCategory.getId()))
-                    .forEach(category -> {
-                        CategoryTreeDto childTreeDto = new CategoryTreeDto();
-                        childCategoryTreeDto.add(childTreeDto);
-                        categoryMap.put(category.getId(), childTreeDto);
-                        categoryDeque.push(category);
-                    });
-
-            currentTreeDto.setChildCategories(childCategoryTreeDto);
-        }
-
-        return sortCategoryTreeDtoRoot(categoryTreeDtoRoot);
+        childCategoryTreeDto.sort(Comparator.comparing(CategoryTreeDto::getName));
+        categoryTreeDto.setChildCategories(childCategoryTreeDto);
+        return categoryTreeDto;
     }
-
-    private CategoryTreeDto sortCategoryTreeDtoRoot(CategoryTreeDto root) {
-        Deque<CategoryTreeDto> categoryTreeDtoDeque = new LinkedList<>();
-        categoryTreeDtoDeque.push(root);
-
-        while (!categoryTreeDtoDeque.isEmpty()) {
-            CategoryTreeDto current = categoryTreeDtoDeque.pop();
-            List<CategoryTreeDto> childCategories = current.getChildCategories();
-
-            if (childCategories != null && !childCategories.isEmpty()) {
-                childCategories.sort(Comparator.comparing(dto -> Optional.ofNullable(dto.getName()).orElse("")));
-                categoryTreeDtoDeque.addAll(childCategories);
-            }
-        }
-
-        return root;
-    }
-
 }
