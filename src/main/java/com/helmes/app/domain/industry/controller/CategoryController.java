@@ -73,13 +73,12 @@ public class CategoryController {
     private List<CategoryTreeDto> buildCategoryTreeDto(List<Category> categoryList) {
         return categoryList.stream()
                 .filter(category -> category.getRelationId() == null)
-                .map(category -> composeCategoryTreeDtoTree(category, categoryList))
+                .map(category -> composeCategoryTreeDto(category, categoryList))
                 .sorted(Comparator.comparing(CategoryTreeDto::getName))
                 .toList();
     }
 
-
-    private CategoryTreeDto composeCategoryTreeDtoTree(Category rootCategory, List<Category> categoryList) {
+    private CategoryTreeDto composeCategoryTreeDto(Category rootCategory, List<Category> categoryList) {
         Map<Long, CategoryTreeDto> categoryMap = new HashMap<>();
         Deque<Category> categoryDeque = new LinkedList<>();
         CategoryTreeDto categoryTreeDtoRoot = new CategoryTreeDto();
