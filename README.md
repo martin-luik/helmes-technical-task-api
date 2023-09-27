@@ -75,7 +75,7 @@ You can now easily run the project from IntelliJ IDEA using these configurations
 
 Once the project is running locally, you can access the API at the following URL:
 
-- Local URL: [https://localhost:8080](https://localhost:8080)
+- Local URL: [https://localhost:9090](https://localhost:8080)
 
 Make sure to replace `localhost` with the appropriate hostname or IP address if needed.
 
