@@ -1,6 +1,5 @@
 package com.helmes.app.common;
 
-import com.helmes.app.domain.industry.exception.BusinessLogicException;
 import lombok.Builder;
 import lombok.Value;
 import org.springframework.http.HttpStatus;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import com.helmes.app.industry.exception.BusinessLogicException;
 
 import java.util.ArrayList;
 import java.util.Collections;

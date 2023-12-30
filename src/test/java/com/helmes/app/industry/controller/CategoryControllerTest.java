@@ -1,12 +1,14 @@
-package com.helmes.app.domain.industry.controller;
+package com.helmes.app.industry.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.helmes.app.common.ControllerExceptionHandler;
-import com.helmes.app.domain.industry.dto.AddCategoryDto;
-import com.helmes.app.domain.industry.dto.CategoryTreeDto;
-import com.helmes.app.domain.industry.dto.EditCategoryDto;
-import com.helmes.app.domain.industry.model.Category;
-import com.helmes.app.domain.industry.service.CategoryService;
+import com.helmes.app.industry.controller.CategoryController;
+import com.helmes.app.industry.model.dto.AddCategoryDto;
+import com.helmes.app.industry.model.dto.CategoryTreeDto;
+import com.helmes.app.industry.model.dto.EditCategoryDto;
+import com.helmes.app.industry.model.entity.Category;
+import com.helmes.app.industry.service.CategoryService;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

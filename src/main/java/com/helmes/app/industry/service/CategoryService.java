@@ -1,7 +1,5 @@
-package com.helmes.app.domain.industry.service;
+package com.helmes.app.industry.service;
 
-import com.helmes.app.domain.industry.model.Category;
-import com.helmes.app.domain.industry.repository.CategoryRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +8,9 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.helmes.app.industry.model.entity.Category;
+import com.helmes.app.industry.repository.CategoryRepository;
 
 import java.util.*;
 
@@ -72,7 +73,7 @@ public class CategoryService {
 
         Long categoryRelationId = category.getRelationId();
 
-        if (categoryRelationId != null && getById(categoryRelationId).isEmpty()) {
+        if (Objects.nonNull(categoryRelationId) && categoryRepository.findById(categoryRelationId).isEmpty()) {
             throw new IllegalStateException(format("Category with relation [id: %d] not found", categoryRelationId));
         }
 

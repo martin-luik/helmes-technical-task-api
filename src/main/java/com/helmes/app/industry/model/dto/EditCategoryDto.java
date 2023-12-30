@@ -1,4 +1,4 @@
-package com.helmes.app.domain.industry.dto;
+package com.helmes.app.industry.model.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;

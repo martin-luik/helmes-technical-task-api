@@ -1,4 +1,4 @@
-package com.helmes.app.domain.industry.model;
+package com.helmes.app.industry.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

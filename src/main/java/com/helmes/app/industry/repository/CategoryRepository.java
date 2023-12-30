@@ -1,8 +1,9 @@
-package com.helmes.app.domain.industry.repository;
+package com.helmes.app.industry.repository;
 
-import com.helmes.app.domain.industry.model.Category;
 import jakarta.annotation.Nonnull;
 import org.springframework.data.repository.CrudRepository;
+
+import com.helmes.app.industry.model.entity.Category;
 
 import java.util.List;
 

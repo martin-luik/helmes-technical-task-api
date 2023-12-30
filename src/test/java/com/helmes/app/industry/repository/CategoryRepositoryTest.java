@@ -1,6 +1,5 @@
-package com.helmes.app.domain.industry.repository;
+package com.helmes.app.industry.repository;
 
-import com.helmes.app.domain.industry.model.Category;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +7,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import com.helmes.app.industry.model.entity.Category;
+import com.helmes.app.industry.repository.CategoryRepository;
 
 import java.util.Date;
 import java.util.List;

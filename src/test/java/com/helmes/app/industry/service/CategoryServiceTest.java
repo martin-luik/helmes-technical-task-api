@@ -1,12 +1,14 @@
-package com.helmes.app.domain.industry.service;
+package com.helmes.app.industry.service;
 
-import com.helmes.app.domain.industry.model.Category;
-import com.helmes.app.domain.industry.repository.CategoryRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.helmes.app.industry.model.entity.Category;
+import com.helmes.app.industry.repository.CategoryRepository;
+import com.helmes.app.industry.service.CategoryService;
 
 import java.util.List;
 import java.util.Optional;
