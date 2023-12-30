@@ -73,7 +73,7 @@ public class CategoryService {
 
         Long categoryRelationId = category.getRelationId();
 
-        if (Objects.nonNull(categoryRelationId) && categoryRepository.findById(categoryRelationId).isEmpty()) {
+        if (isCategoryExistByRelationId(categoryRelationId)) {
             throw new IllegalStateException(format("Category with relation [id: %d] not found", categoryRelationId));
         }
 
@@ -82,6 +82,10 @@ public class CategoryService {
         }
 
         updateRootCategory(category);
+    }
+
+    private boolean isCategoryExistByRelationId(Long relationId) {
+        return Objects.nonNull(relationId) && categoryRepository.findById(relationId).isEmpty();
     }
 
     private boolean isChildCategory(Category category) {
