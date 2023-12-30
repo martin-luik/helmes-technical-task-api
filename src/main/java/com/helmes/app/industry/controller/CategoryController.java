@@ -18,8 +18,6 @@ import com.helmes.app.industry.model.mapper.CategoriesToCategoryTreeDto;
 import com.helmes.app.industry.model.mapper.EditCategoryDtoToCategory;
 import com.helmes.app.industry.service.CategoryService;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @Validated
